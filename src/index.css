@@ -1,0 +1,22 @@
+/* ./src/index.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .form-input {
+    @apply rounded border border-gray-400 focus:ring-0 focus:border-yellow-500 w-full;
+  }
+
+  .row {
+    @apply flex w-full my-2;
+  }
+
+  .btn {
+    @apply py-1 px-3 rounded-md shadow-sm;
+  }
+
+  .green {
+    @apply bg-green-400 hover:bg-green-500 text-white;
+  }
+}
