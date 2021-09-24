@@ -12,77 +12,55 @@ export const quickSort = (array, start, end, delay) => {
 };
 
 const quickSortPartition = (array, start, end, delay) => {
-  let i = start,
-    j = end - 1,
-    pivot = end;
-  while (i <= j) {
-    // item from left > pivot
-    if (array[i] <= array[pivot]) {
-      i++;
-      delay(
-        {
-          pivot,
-          first: i,
-          second: j,
-          action: "ITEM-LEFT",
-        },
-        [...array]
-      );
-      continue;
-    }
-    // item from right < pivot
-    if (array[j] >= array[pivot]) {
-      j--;
-      delay(
-        {
-          pivot,
-          first: i,
-          second: j,
-          action: "ITEM-RIGHT",
-        },
-        [...array]
-      );
-      continue;
-    }
-
-    // animation effect
-    delay({ pivot, first: i, second: j, action: "SWOP" }, [...array]);
-    // swap item left with item right
-    swap(array, i, j);
-    // animation effect
+  let pivot = array[end];
+  let pivotIndex = end;
+  let j = start - 1;
+  for (let i = start; i < end; i++) {
+    // i is looking for the first element less than pivot
+    // j is looking for the first element greater than pivot
     delay(
       {
-        pivot,
+        pivotIndex,
         first: i,
         second: j,
-        action: "SWOPPED",
+        action: "From left, looking for element less than pivot",
       },
       [...array]
     );
+    if (array[i] < pivot) {
+      j++;
+      delay(
+        {
+          pivotIndex,
+          first: i,
+          second: j,
+          action: "From left, looking for element greater than pivot",
+        },
+        [...array]
+      );
+      swap(array, i, j);
+      delay(
+        {
+          pivotIndex,
+          first: i,
+          second: j,
+          action: `swop`,
+        },
+        [...array]
+      );
+    }
   }
-
+  swap(array, j + 1, pivotIndex);
   delay(
     {
-      pivot,
-      first: i,
+      pivotIndex: j + 1,
+      first: end,
       second: j,
-      action: "FOUND-PIVOT-POSITION",
+      action: "Pivot correct position",
     },
     [...array]
   );
-  // move pivot to the correct spot
-  swap(array, i, pivot);
-
-  delay(
-    {
-      pivot: i,
-      first: i,
-      second: j,
-      action: "PIVOT-POSITION",
-    },
-    [...array]
-  );
-  return i; // pivot correct spot
+  return j + 1;
 };
 
 const swap = (array, i, j) => {
