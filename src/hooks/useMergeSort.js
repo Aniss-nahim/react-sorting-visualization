@@ -1,18 +1,16 @@
-import { useState, useEffect } from "react";
-import { quickSort } from "../algorithms";
+import { useEffect, useState } from "react";
+import { mergeSort } from "../algorithms";
 import delay from "../helper/delay";
 
-const useQuickSort = (array, speed) => {
-  const [arraySnapShot, setArraySnapshot] = useState(array);
+const useMergeSort = (array, speed) => {
+  const [animation, setAnimation] = useState({
+    action: "Click the sort button to start Merge sort",
+    first: 0,
+    second: 1,
+  });
 
   const [isSorting, setIsSorting] = useState(false);
-
-  const [animation, setAnimation] = useState({
-    pivotIndex: array.length - 1,
-    action: "Click the sort button to start quick sort",
-    first: 0,
-    second: array.length - 2,
-  });
+  const [arraySnapShot, setArraySnapshot] = useState(array);
 
   useEffect(() => {
     if (isSorting) {
@@ -29,9 +27,9 @@ const useQuickSort = (array, speed) => {
   // config delay function
   const delayFunc = delay(animiationEffect, speed, setArraySnapshot);
 
-  // Quick sort
+  // Merge Sort the array
   const sort = () => {
-    quickSort(array, 0, array.length - 1, delayFunc);
+    mergeSort(array, 0, array.length - 1, delayFunc);
   };
 
   // trigger sorting function
@@ -42,12 +40,10 @@ const useQuickSort = (array, speed) => {
   // colorizer function
   const colorizer = (index) => {
     switch (index) {
-      case animation.pivotIndex:
+      case animation.first:
         return "bg-green-300";
       case animation.second:
         return "bg-blue-300";
-      case animation.first:
-        return "bg-red-300";
       default:
         return "bg-white";
     }
@@ -63,4 +59,4 @@ const useQuickSort = (array, speed) => {
   ];
 };
 
-export default useQuickSort;
+export default useMergeSort;

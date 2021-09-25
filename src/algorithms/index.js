@@ -101,12 +101,12 @@ const swap = (array, i, j) => {
  * @param {Integer} end ending index of the array
  * @returns {void}
  */
-export const mergeSort = (array, start, end) => {
+export const mergeSort = (array, start, end, delay) => {
   if (start >= end) return;
   let half = Math.floor((start + end) / 2);
-  mergeSort(array, start, half);
-  mergeSort(array, half + 1, end);
-  merge(array, start, half, end);
+  mergeSort(array, start, half, delay);
+  mergeSort(array, half + 1, end, delay);
+  merge(array, start, half, end, delay);
 };
 
 /**
@@ -116,27 +116,41 @@ export const mergeSort = (array, start, end) => {
  * @param {Integer} half middle index of the array
  * @param {Integer} end ending index of the array
  */
-const merge = (array, start, half, end) => {
+const merge = (array, start, half, end, delay) => {
   let temp = array.slice(half + 1, end + 1); // O(N)
   let i = half; // index on main array
   let j = temp.length - 1; // index on temp array
   let k = end; // index on
 
+  delay(
+    {
+      action: "ready to merge",
+      first: i,
+      second: j + half + 1,
+    },
+    [...array]
+  );
+
   while (i >= start && j >= 0) {
     // animation
+    delay({ action: "comparing", first: i, second: j + half + 1 }, [...array]);
     if (array[i] > temp[j]) {
       array[k--] = array[i--];
+      delay({ action: "ordering", first: i, second: j + half + 1 }, [...array]);
     } else {
       array[k--] = temp[j--];
+      delay({ action: "ordering", first: i, second: j + half + 1 }, [...array]);
     }
     // animation
   }
 
   while (i >= start) {
     array[k--] = array[i--];
+    delay({ action: "last moves", first: i, second: j + half + 1 }, [...array]);
   }
 
   while (j >= 0) {
     array[k--] = temp[j--];
+    delay({ action: "last moves", first: i, second: j + half + 1 }, [...array]);
   }
 };

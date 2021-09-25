@@ -4,6 +4,7 @@ import useQuickSort from "./hooks/useQuickSort";
 import { ChartBarIcon } from "@heroicons/react/solid";
 import QuickSortStatus from "./components/QuickSortStatus";
 import randomArray from "./helper/randomArray";
+import useMergeSort from "./hooks/useMergeSort";
 
 const App = () => {
   const [array, setArray] = useState([]);
@@ -15,10 +16,19 @@ const App = () => {
 
   // generate new random array
   const generateArray = () => {
-    let newarray = randomArray(5, 5, 100);
+    let newarray = randomArray(130, 5, 100);
     setArray(newarray);
     setArraySnapshot(newarray);
   };
+
+  // const [
+  //   animation,
+  //   colorizer,
+  //   arraySnapShot,
+  //   setArraySnapshot,
+  //   startSorting,
+  //   isSorting,
+  // ] = useQuickSort(array, 150);
 
   const [
     animation,
@@ -27,7 +37,7 @@ const App = () => {
     setArraySnapshot,
     startSorting,
     isSorting,
-  ] = useQuickSort(array, 150);
+  ] = useMergeSort(array, setArray, 100);
 
   return (
     <div className="p-2">

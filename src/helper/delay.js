@@ -6,9 +6,9 @@ let clock = 1;
 
 const delay = (animation, speed, setArraySnapshot) => (params, array) => {
   setTimeout(() => {
-    animation(params);
+    animation({ ...params });
     if (array) {
-      setArraySnapshot(array);
+      setArraySnapshot([...array]);
     }
   }, clock * speed);
   clock++;
