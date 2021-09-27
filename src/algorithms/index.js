@@ -14,11 +14,11 @@
  * @param {Function} delay delay function for animation
  * @returns {void}
  */
-export const quickSort = (array, start, end, delay) => {
+export const quickSort = (array, start, end, delayAnimation) => {
   if (start >= end) return;
-  let index = quickSortPartition(array, start, end, delay);
-  quickSort(array, start, index - 1, delay);
-  quickSort(array, index + 1, end, delay);
+  let index = quickSortPartition(array, start, end, delayAnimation);
+  quickSort(array, start, index - 1, delayAnimation);
+  quickSort(array, index + 1, end, delayAnimation);
 };
 
 /**
@@ -30,57 +30,57 @@ export const quickSort = (array, start, end, delay) => {
  * @param {Array} array array to partition
  * @param {Integer} start starting index of the array
  * @param {Integer} end ending index of the array
- * @param {Function} delay delay function for animation
+ * @param {Function} delayAnimation delayAnimation function for animation
  * @returns {Integer} pivote correct position
  */
-const quickSortPartition = (array, start, end, delay) => {
+const quickSortPartition = (array, start, end, delayAnimation) => {
   let pivot = array[end];
   let pivotIndex = end;
   let j = start - 1;
   for (let i = start; i < end; i++) {
     // i is looking for the first element less than pivot
     // j is looking for the first element greater than pivot
-    delay(
+    delayAnimation(
       {
         pivotIndex,
         first: i,
         second: j,
         action: "From left, looking for element less than pivot",
       },
-      [...array]
+      array
     );
     if (array[i] < pivot) {
       j++;
-      delay(
+      delayAnimation(
         {
           pivotIndex,
           first: i,
           second: j,
           action: "From left, looking for element greater than pivot",
         },
-        [...array]
+        array
       );
       swap(array, i, j);
-      delay(
+      delayAnimation(
         {
           pivotIndex,
           first: i,
           second: j,
           action: `swop`,
         },
-        [...array]
+        array
       );
     }
   }
   swap(array, j + 1, pivotIndex);
-  delay(
+  delayAnimation(
     {
       pivotIndex: j + 1,
       first: end,
       second: j,
       action: "Pivot correct position",
     },
-    [...array]
+    array
   );
   return j + 1;
 };
@@ -101,12 +101,12 @@ const swap = (array, i, j) => {
  * @param {Integer} end ending index of the array
  * @returns {void}
  */
-export const mergeSort = (array, start, end) => {
+export const mergeSort = (array, start, end, delayAnimation) => {
   if (start >= end) return;
   let half = Math.floor((start + end) / 2);
-  mergeSort(array, start, half);
-  mergeSort(array, half + 1, end);
-  merge(array, start, half, end);
+  mergeSort(array, start, half, delayAnimation);
+  mergeSort(array, half + 1, end, delayAnimation);
+  merge(array, start, half, end, delayAnimation);
 };
 
 /**
@@ -116,27 +116,54 @@ export const mergeSort = (array, start, end) => {
  * @param {Integer} half middle index of the array
  * @param {Integer} end ending index of the array
  */
-const merge = (array, start, half, end) => {
+const merge = (array, start, half, end, delayAnimation) => {
   let temp = array.slice(half + 1, end + 1); // O(N)
   let i = half; // index on main array
   let j = temp.length - 1; // index on temp array
   let k = end; // index on
 
+  delayAnimation(
+    {
+      action: "ready to merge",
+      first: i,
+      second: j + half + 1,
+    },
+    array
+  );
+
   while (i >= start && j >= 0) {
     // animation
+    delayAnimation(
+      { action: "comparing", first: i, second: j + half + 1 },
+      array
+    );
     if (array[i] > temp[j]) {
       array[k--] = array[i--];
+      delayAnimation(
+        { action: "ordering", first: i, second: j + half + 1 },
+        array
+      );
     } else {
       array[k--] = temp[j--];
+      delayAnimation(
+        { action: "ordering", first: i, second: j + half + 1 },
+        array
+      );
     }
     // animation
   }
 
   while (i >= start) {
     array[k--] = array[i--];
+    delayAnimation({ action: "last moves", first: i, second: j + half + 1 }, [
+      ...array,
+    ]);
   }
 
   while (j >= 0) {
     array[k--] = temp[j--];
+    delayAnimation({ action: "last moves", first: i, second: j + half + 1 }, [
+      ...array,
+    ]);
   }
 };

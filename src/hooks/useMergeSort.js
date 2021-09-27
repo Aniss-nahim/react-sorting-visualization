@@ -1,27 +1,24 @@
-import { quickSort } from "../algorithms";
+import { mergeSort } from "../algorithms";
 import useAnimation from "./useAnimation";
 
-const useQuickSort = (array, speed) => {
-  // Initial animation
+const useMergeSort = (array, speed) => {
+  // Initial Animation
   const initAnimation = {
-    pivotIndex: array.length - 1,
-    action: "Click the sort button to start quick sort",
+    action: "Click the sort button to start Merge sort",
     first: 0,
-    second: array.length - 2,
+    second: 1,
   };
 
   const [animation, arraySnapShot, setArraySnapshot, startSorting, isSorting] =
-    useAnimation(array, initAnimation, speed, quickSort);
+    useAnimation(array, initAnimation, speed, mergeSort);
 
   // colorizer function
   const colorizer = (index) => {
     switch (index) {
-      case animation.pivotIndex:
+      case animation.first:
         return "bg-green-300";
       case animation.second:
         return "bg-blue-300";
-      case animation.first:
-        return "bg-red-300";
       default:
         return "";
     }
@@ -37,4 +34,4 @@ const useQuickSort = (array, speed) => {
   ];
 };
 
-export default useQuickSort;
+export default useMergeSort;

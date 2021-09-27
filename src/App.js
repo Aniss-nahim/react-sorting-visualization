@@ -1,78 +1,104 @@
+import { HeartIcon } from "@heroicons/react/solid";
 import React, { useEffect, useState } from "react";
-import Visualizer from "./components/Visualizer";
-import useQuickSort from "./hooks/useQuickSort";
-import { ChartBarIcon } from "@heroicons/react/solid";
-import QuickSortStatus from "./components/QuickSortStatus";
+import QuickSort from "./components/QuickSort";
 import randomArray from "./helper/randomArray";
 
 const App = () => {
-  const [array, setArray] = useState([]);
+  const [array, setArray] = useState(randomArray(100, 5, 100));
 
-  useEffect(() => {
-    generateArray();
-    // eslint-disable-next-line
-  }, []);
+  // form state
+  const [algorithm, setAlgorithm] = useState("");
+  const [speed, setSpeed] = useState(150);
+  const [length, setLength] = useState(30);
 
-  // generate new random array
-  const generateArray = () => {
-    let newarray = randomArray(5, 5, 100);
-    setArray(newarray);
-    setArraySnapshot(newarray);
+  // handle Changes
+  const handleChange = (setState) => (event) => {
+    setState(event.target.value);
   };
 
-  const [
-    animation,
-    colorizer,
-    arraySnapShot,
-    setArraySnapshot,
-    startSorting,
-    isSorting,
-  ] = useQuickSort(array, 150);
+  // generate new random array
+  const updateApp = (resetAnimation) => {
+    let newarray = randomArray(100, 5, 100);
+    setArray(newarray);
+    resetAnimation(newarray);
+  };
 
   return (
-    <div className="p-2">
-      <div className="container">
-        <div className="row justify-center">
-          <h1 className="text-3xl font-medium">
-            React app sorting visualization
-          </h1>
-        </div>
-      </div>
-      <div className="container py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 gap-y-3">
-          <Visualizer array={arraySnapShot} colorizer={colorizer}>
-            {!isSorting && (
-              <div className="flex justify-center items-center absolute top-0 left-0 h-full w-full bg-white opacity-0 hover:opacity-100 hover:bg-opacity-50">
-                <button
-                  type="button"
-                  className="btn green font-medium uppercase"
-                  onClick={startSorting}
-                >
-                  <ChartBarIcon className="h-5 w-5 inline-block -mt-1" />
-                  Sort
-                </button>
-              </div>
-            )}
-          </Visualizer>
-          <div className="row-span-2 border rounded-md shadow-md">
-            <div className="row">
-              <button
-                type="button"
-                className="btn gray font-medium"
-                onClick={generateArray}
-              >
-                Regen
-              </button>
-            </div>
+    <>
+      <div className="p-2 h-full w-full bg-gray-50">
+        <div className="container">
+          <div className="row justify-center">
+            <h1 className="text-3xl font-medium">
+              React app sorting visualization
+            </h1>
           </div>
-          <QuickSortStatus
-            animation={animation}
-            colorizer={colorizer}
-            array={arraySnapShot}
-          />
+        </div>
+        <div className="container py-8">
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-2 gap-y-3">
+            <div className="col-span-5 rounded-md shadow-md bg-gray-900 text-white">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3 gap-y-3 p-10">
+                <div>
+                  <label for="algorithm" className="text-sm font-medium">
+                    Algorithm
+                  </label>
+                  <select
+                    id="algorithm"
+                    className="form-input text-sm bg-gray-900 text-white"
+                    value={algorithm}
+                    onChange={handleChange(setAlgorithm)}
+                  >
+                    <option></option>
+                    <option value="quickSort">Quick Sort</option>
+                    <option value="mergeSort">Merge Sort</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="length" className="text-sm font-medium">
+                    Array Length : {length}
+                  </label>
+                  <div className="flex justify-between items-center mt-2">
+                    <span className="text-md font-medium">5</span>
+                    <input
+                      type="range"
+                      className="form-input cursor-pointer"
+                      id="length"
+                      name="length"
+                      min="5"
+                      max="120"
+                      value={length}
+                      onChange={handleChange(setLength)}
+                    />
+                    <span className="text-md font-medium">120</span>
+                  </div>
+                </div>
+                <div>
+                  <p className="font-medium">Speed : {speed / 1000} s</p>
+                  <div className="flex justify-between items-center mt-2">
+                    <span className="text-md font-medium">50ms</span>
+                    <input
+                      type="range"
+                      className="form-input"
+                      id="speed"
+                      name="speed"
+                      min="50"
+                      max="5000"
+                      value={speed}
+                      onChange={handleChange(setSpeed)}
+                    />
+                    <span className="text-md font-medium">5s</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <QuickSort array={array} updateApp={updateApp} />
+          </div>
         </div>
       </div>
-    </div>
+      <div className="bg-gray-900 h-10 flex justify-center items-center text-white uppercase">
+        Made with <HeartIcon className="h-4 w-4 inline-block text-red-600" /> By
+        Aniss Nahim
+      </div>
+    </>
   );
 };
 
