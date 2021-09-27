@@ -5,7 +5,7 @@
 
 @layer components {
   .form-input {
-    @apply rounded border border-gray-400 focus:ring-0 focus:border-yellow-500 w-full;
+    @apply rounded border border-gray-400 focus:ring-0 focus:border-gray-500 w-full;
   }
 
   .row {

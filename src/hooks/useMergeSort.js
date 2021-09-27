@@ -1,41 +1,16 @@
-import { useEffect, useState } from "react";
 import { mergeSort } from "../algorithms";
-import delay from "../helper/delay";
+import useAnimation from "./useAnimation";
 
 const useMergeSort = (array, speed) => {
-  const [animation, setAnimation] = useState({
+  // Initial Animation
+  const initAnimation = {
     action: "Click the sort button to start Merge sort",
     first: 0,
     second: 1,
-  });
-
-  const [isSorting, setIsSorting] = useState(false);
-  const [arraySnapShot, setArraySnapshot] = useState(array);
-
-  useEffect(() => {
-    if (isSorting) {
-      sort();
-    }
-    // eslint-disable-next-line
-  }, [isSorting]);
-
-  // update Animation state
-  const animiationEffect = (animation) => {
-    setAnimation(animation);
   };
 
-  // config delay function
-  const delayFunc = delay(animiationEffect, speed, setArraySnapshot);
-
-  // Merge Sort the array
-  const sort = () => {
-    mergeSort(array, 0, array.length - 1, delayFunc);
-  };
-
-  // trigger sorting function
-  const startSorting = () => {
-    setIsSorting(true);
-  };
+  const [animation, arraySnapShot, setArraySnapshot, startSorting, isSorting] =
+    useAnimation(array, initAnimation, speed, mergeSort);
 
   // colorizer function
   const colorizer = (index) => {
@@ -45,7 +20,7 @@ const useMergeSort = (array, speed) => {
       case animation.second:
         return "bg-blue-300";
       default:
-        return "bg-white";
+        return "";
     }
   };
 

@@ -2,12 +2,17 @@ import React from "react";
 
 const QuickSortStatus = ({ animation, colorizer, array }) => {
   return (
-    <div className="flex flex-col border rounded-md shadow-lg p-3 divide-y space-y-2 self-start">
+    <div className="bg-gray-900 text-white h-full col-span-5 lg:col-span-2 m-auto flex flex-col rounded-md shadow-lg p-3 divide-y space-y-2 self-start">
       <div className="row flex-wrap itmes-center justify-center space-x-1">
         <span className="font-medium">[</span>
         {array.map((item, index) => (
-          <div key={index} className={`rounded-md ${colorizer(index)}`}>
-            <p>{item},</p>
+          <div
+            key={index}
+            className={`rounded-md text-center text-gray-900 ${colorizer(
+              index
+            )}`}
+          >
+            <p className="text-white">{item},</p>
           </div>
         ))}
         <span className="font-medium">]</span>

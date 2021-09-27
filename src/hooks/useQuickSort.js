@@ -1,43 +1,17 @@
-import { useState, useEffect } from "react";
 import { quickSort } from "../algorithms";
-import delay from "../helper/delay";
+import useAnimation from "./useAnimation";
 
 const useQuickSort = (array, speed) => {
-  const [arraySnapShot, setArraySnapshot] = useState(array);
-
-  const [isSorting, setIsSorting] = useState(false);
-
-  const [animation, setAnimation] = useState({
+  // Initial animation
+  const initAnimation = {
     pivotIndex: array.length - 1,
     action: "Click the sort button to start quick sort",
     first: 0,
     second: array.length - 2,
-  });
-
-  useEffect(() => {
-    if (isSorting) {
-      sort();
-    }
-    // eslint-disable-next-line
-  }, [isSorting]);
-
-  // update Animation state
-  const animiationEffect = (animation) => {
-    setAnimation(animation);
   };
 
-  // config delay function
-  const delayFunc = delay(animiationEffect, speed, setArraySnapshot);
-
-  // Quick sort
-  const sort = () => {
-    quickSort(array, 0, array.length - 1, delayFunc);
-  };
-
-  // trigger sorting function
-  const startSorting = () => {
-    setIsSorting(true);
-  };
+  const [animation, arraySnapShot, setArraySnapshot, startSorting, isSorting] =
+    useAnimation(array, initAnimation, speed, quickSort);
 
   // colorizer function
   const colorizer = (index) => {
@@ -49,7 +23,7 @@ const useQuickSort = (array, speed) => {
       case animation.first:
         return "bg-red-300";
       default:
-        return "bg-white";
+        return "";
     }
   };
 
