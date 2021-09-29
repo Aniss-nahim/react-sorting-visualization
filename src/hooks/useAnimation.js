@@ -1,46 +1,45 @@
 import { useEffect, useState } from "react";
-import delayAnimation from "../helper/delayAnimation";
+import { delayAnimation, clock } from "../helper/delayAnimation";
 
-const useAnimation = (mainArray, initAnimation, speed, sortingAlgorithm) => {
-  const [arraySnapShot, setArraySnapshot] = useState(mainArray);
+const useAnimation = (mainArray, initAnimation, sortingAlgorithm) => {
+  const [arraySnapShot, setArraySnapshot] = useState([]);
   const [isSorting, setIsSorting] = useState(false);
   const [animation, setAnimation] = useState(initAnimation);
-
-  const [animationClock, setAnimationClock] = useState(1);
+  const [speed, setSpeed] = useState(150);
 
   // config delay function
   // set the animation object on each delay
-  const delayFunc = delayAnimation(
-    setAnimation,
-    animationClock * speed,
-    setArraySnapshot,
-    setAnimationClock
-  );
+  let delayFunc = delayAnimation(setAnimation, speed, setArraySnapshot);
 
   // trigger sorting function
   const startSorting = () => {
     setIsSorting(true);
-  };
-
-  // Sort the array using sorting algorithm
-  const sort = () => {
-    sortingAlgorithm(mainArray, 0, mainArray.length - 1, delayFunc);
+    sort();
   };
 
   useEffect(() => {
-    if (isSorting) {
-      sort();
-    }
-    // eslint-disable-next-line
-  }, [isSorting]);
+    delayFunc = delayAnimation(setAnimation, speed, setArraySnapshot);
+  }, [speed]);
 
-  // Rest all Animations
-  const resetAnimation = (newArray) => {
-    setArraySnapshot(newArray);
-    setIsSorting(false);
+  // Sort the array using sorting algorithm
+  const sort = () => {
+    sortingAlgorithm(mainArray, 0, mainArray.length - 1, delayFunc());
   };
 
-  return [animation, arraySnapShot, resetAnimation, startSorting, isSorting];
+  // Rest all
+  const reset = (newArray, newSpeed) => {
+    setIsSorting(false);
+    setSpeed(newSpeed);
+    setArraySnapshot([...newArray]);
+    setAnimation({
+      action: "Click the sort button to start quick sort",
+      first: 0,
+      pivotIndex: newArray.length - 1,
+      second: newArray.length - 2,
+    });
+  };
+
+  return [animation, arraySnapShot, reset, startSorting, isSorting];
 };
 
 export default useAnimation;

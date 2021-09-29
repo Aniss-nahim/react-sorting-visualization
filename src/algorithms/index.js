@@ -4,6 +4,8 @@
  * @license MIT
  */
 
+export const registredAlgorithms = ["quicksort", "mergesort"];
+
 /**
  * Sort array using Quick Sort algorithm
  * Time complexity : O(nlogn)

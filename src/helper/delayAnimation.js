@@ -4,14 +4,13 @@
  * function will get a snapshot of the main array
  */
 
-const delayAnimation =
-  (setAnimation, delay, setArraySnapshot, setClock) => (params, array) => {
+export let clock = 1;
+
+export const delayAnimation =
+  (setAnimation, speed, setArraySnapshot) => (params, array) => {
     const arraySnapshot = [...array];
     setTimeout(() => {
       setAnimation(params);
       setArraySnapshot(arraySnapshot);
-    }, delay);
-    setClock((lastClock) => lastClock + 1);
+    }, clock++ * speed);
   };
-
-export default delayAnimation;

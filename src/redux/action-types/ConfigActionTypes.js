@@ -1,0 +1,2 @@
+export const CONFIG_UPDATE = "CONFIG_UPDATE";
+export const CONFIG_RESET = "CONFIG_RESET";
