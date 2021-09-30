@@ -1,40 +1,45 @@
+import { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { updateAnimation } from "../redux/action-creators/AnimationActions";
 import { quickSort } from "../algorithms";
 import useAnimation from "./useAnimation";
 
-const useQuickSort = (array, speed) => {
-  // Initial animation
-  const initAnimation = {
-    pivotIndex: array.length - 1,
-    action: "Click the sort button to start quick sort",
-    first: 0,
-    second: array.length - 2,
-  };
+const useQuickSort = () => {
+  const { array } = useSelector((state) => state.array);
+  const { animation } = useSelector((state) => state.animation);
+  const dispatch = useDispatch();
 
-  const [animation, arraySnapShot, setArraySnapshot, startSorting, isSorting] =
-    useAnimation(array, initAnimation, speed, quickSort);
+  useEffect(() => {
+    // Initial animation state for quick sort
+    dispatch(
+      updateAnimation({
+        pivotIndex: array.length - 1,
+        action: "Ready to sort",
+        first: 0,
+        second: array.length - 2,
+      })
+    );
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const [startSorting] = useAnimation(quickSort);
 
   // colorizer function
   const colorizer = (index) => {
     switch (index) {
-      case animation.pivotIndex:
-        return "bg-green-300";
-      case animation.second:
-        return "bg-blue-300";
-      case animation.first:
-        return "bg-red-300";
+      case animation?.pivotIndex:
+        return "bg-green-400";
+      case animation?.second:
+        return "bg-blue-400";
+      case animation?.first:
+        return "bg-red-400";
       default:
         return "";
     }
   };
 
-  return [
-    animation,
-    colorizer,
-    arraySnapShot,
-    setArraySnapshot,
-    startSorting,
-    isSorting,
-  ];
+  return [colorizer, startSorting];
 };
 
 export default useQuickSort;

@@ -2,7 +2,7 @@ import React from "react";
 import useMergeSort from "../hooks/useMergeSort";
 import MergeSortStatus from "./status/MergeSortStatus";
 
-const MergeSort = () => {
+const MergeSort = ({ array, length, updateApp, speed }) => {
   const [
     animation,
     colorizer,
@@ -10,7 +10,7 @@ const MergeSort = () => {
     setArraySnapshot,
     startSorting,
     isSorting,
-  ] = useMergeSort(array, setArray, 100);
+  ] = useMergeSort(array, 100);
 
   // MergeSort Status props
   const statusProps = {
