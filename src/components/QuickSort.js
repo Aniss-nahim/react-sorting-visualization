@@ -1,32 +1,25 @@
-import React, { useEffect } from "react";
-import useQuickSort from "../hooks/useQuickSort";
-import QuickSortStatus from "./status/QuickSortStatus";
+import React from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { ChartBarIcon, RefreshIcon } from "@heroicons/react/solid";
+import { createArray } from "../redux/action-creators/ArrayActions";
 import Visualizer from "./Visualizer";
+import QuickSortStatus from "./status/QuickSortStatus";
+import useQuickSort from "../hooks/useQuickSort";
 
-const QuickSort = ({ array, length, speed, updateApp }) => {
-  const [animation, colorizer, arraySnapShot, reset, startSorting, isSorting] =
-    useQuickSort(array);
+const QuickSort = () => {
+  const { isSorting } = useSelector((state) => state.array);
+  const [colorizer, startSorting] = useQuickSort();
 
-  // QuickSort Status props
-  const statusProps = {
-    array: arraySnapShot,
-    animation,
-    colorizer,
-  };
+  const dispatch = useDispatch();
 
-  useEffect(() => {
-    reset(array, speed);
-  }, [array]);
-
-  const generateNewArray = () => {
-    updateApp(length);
-    reset(array, speed);
+  // Regenerate new random Array
+  const updateArray = () => {
+    dispatch(createArray());
   };
 
   return (
     <>
-      <Visualizer array={arraySnapShot} colorizer={colorizer}>
+      <Visualizer colorizer={colorizer}>
         {!isSorting && (
           <div className="flex justify-center items-center space-x-3 rounded-md absolute top-0 left-0 h-full w-full bg-gray-500 opacity-0 hover:opacity-100 hover:bg-opacity-50">
             <button
@@ -40,7 +33,7 @@ const QuickSort = ({ array, length, speed, updateApp }) => {
             <button
               type="button"
               className="btn gray font-medium uppercase"
-              onClick={generateNewArray}
+              onClick={updateArray}
             >
               <RefreshIcon className="h-5 w-5 inline-block -mt-1" />
               Regenerate
@@ -48,7 +41,7 @@ const QuickSort = ({ array, length, speed, updateApp }) => {
           </div>
         )}
       </Visualizer>
-      <QuickSortStatus {...statusProps} />
+      <QuickSortStatus colorizer={colorizer} />
     </>
   );
 };

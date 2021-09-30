@@ -6,6 +6,8 @@ import * as actionTypes from "../action-types/ConfigActionTypes";
 const initState = {
   algorithm: "",
   speed: 150,
+  minSpeed: 50,
+  maxSpeed: 5000,
   length: 20,
   maxLength: 120,
   minLength: 5,

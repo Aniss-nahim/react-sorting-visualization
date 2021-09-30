@@ -3,17 +3,22 @@
  */
 import * as actionTypes from "../action-types/AnimationActionTypes";
 
-const initState = {};
+const initState = {
+  animation: {},
+};
 
 const animationReducer = (state = initState, action) => {
   switch (action.type) {
     case actionTypes.ANIMATION_CLEAR:
-      return {};
+      return {
+        ...state,
+        animation: {},
+      };
 
     case actionTypes.ANIMATION_UPDATE:
       return {
         ...state,
-        ...action.payload,
+        animation: { ...action.payload },
       };
 
     default:

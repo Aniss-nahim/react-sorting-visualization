@@ -2,41 +2,27 @@ import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { HeartIcon } from "@heroicons/react/solid";
 import { registredAlgorithms } from "./algorithms";
-import randomArray from "./helper/randomArray";
+import { createArray } from "./redux/action-creators/ArrayActions";
 import SortingForm from "./components/SortingForm";
 import QuickSort from "./components/QuickSort";
-import MergeSort from "./components/MergeSort";
 
 const App = () => {
-  const { array } = useSelector((state) => state.array);
-
-  const [componentProps, setComponentProps] = useState(null);
+  const config = useSelector((state) => state.config);
   const [currentAlgo, setCurrentAlgo] = useState("");
 
-  // generate new random array
-  const updateApp = (length) => {
-    // setArray(randomArray(length, 5, 100));
-  };
+  const dispatch = useDispatch();
 
   // Start the app
-  const createApp = (algorithm, length, speed) => {
-    setCurrentAlgo(algorithm);
-    setComponentProps({ speed, length });
-    updateApp(length);
+  const createApp = () => {
+    setCurrentAlgo(config.algorithm);
+    dispatch(createArray());
   };
 
   // Get right component based on chosen algorithm
   const getComponent = () => {
     switch (currentAlgo) {
       case registredAlgorithms[0]:
-        return (
-          <QuickSort array={array} updateApp={updateApp} {...componentProps} />
-        );
-
-      case registredAlgorithms[1]:
-        return (
-          <MergeSort array={array} updateApp={updateApp} {...componentProps} />
-        );
+        return <QuickSort />;
 
       default:
         return (

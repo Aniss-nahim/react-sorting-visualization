@@ -1,45 +1,48 @@
-import { useEffect, useState } from "react";
-import { delayAnimation, clock } from "../helper/delayAnimation";
+import { useDispatch, useSelector } from "react-redux";
+// import { delayAnimation } from "../helper/delayAnimation";
+import {
+  sortingArray,
+  sortedArray,
+  stopSortingArray,
+} from "../redux/action-creators/ArrayActions";
 
-const useAnimation = (mainArray, initAnimation, sortingAlgorithm) => {
-  const [arraySnapShot, setArraySnapshot] = useState([]);
-  const [isSorting, setIsSorting] = useState(false);
-  const [animation, setAnimation] = useState(initAnimation);
-  const [speed, setSpeed] = useState(150);
+const useAnimation = (sortingAlgorithm) => {
+  const { array } = useSelector((state) => state.array);
+
+  const dispatch = useDispatch();
 
   // config delay function
   // set the animation object on each delay
-  let delayFunc = delayAnimation(setAnimation, speed, setArraySnapshot);
+  // let delayFunc = delayAnimation(setAnimation, speed, setArraySnapshot);
 
   // trigger sorting function
-  const startSorting = () => {
-    setIsSorting(true);
-    sort();
+  const startSorting = async () => {
+    // isSorting set to true
+    dispatch(sortingArray());
+    await sort();
+    dispatch(stopSortingArray());
   };
-
-  useEffect(() => {
-    delayFunc = delayAnimation(setAnimation, speed, setArraySnapshot);
-  }, [speed]);
 
   // Sort the array using sorting algorithm
-  const sort = () => {
-    sortingAlgorithm(mainArray, 0, mainArray.length - 1, delayFunc());
+  const sort = async () => {
+    await sortingAlgorithm(array, 0, array.length - 1, dispatch);
+    await dispatch(sortedArray());
   };
 
-  // Rest all
-  const reset = (newArray, newSpeed) => {
-    setIsSorting(false);
-    setSpeed(newSpeed);
-    setArraySnapshot([...newArray]);
-    setAnimation({
-      action: "Click the sort button to start quick sort",
-      first: 0,
-      pivotIndex: newArray.length - 1,
-      second: newArray.length - 2,
-    });
-  };
+  // // Rest all
+  // const reset = (newArray, newSpeed) => {
+  //   setIsSorting(false);
+  //   setSpeed(newSpeed);
+  //   setArraySnapshot([...newArray]);
+  //   setAnimation({
+  //     action: "Click the sort button to start quick sort",
+  //     first: 0,
+  //     pivotIndex: newArray.length - 1,
+  //     second: newArray.length - 2,
+  //   });
+  // };
 
-  return [animation, arraySnapShot, reset, startSorting, isSorting];
+  return [startSorting];
 };
 
 export default useAnimation;

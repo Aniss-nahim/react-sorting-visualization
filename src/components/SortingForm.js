@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { registredAlgorithms } from "../algorithms";
-import { putConfig } from "../redux/action-creators/ConfigActions";
+import { putConfig, resetConfig } from "../redux/action-creators/ConfigActions";
+import { alertPush } from "../redux/action-creators/AlertActions";
+import { AdjustmentsIcon, RefreshIcon } from "@heroicons/react/solid";
 
 const SortingForm = ({ createApp }) => {
   const config = useSelector((state) => state.config);
@@ -18,38 +20,71 @@ const SortingForm = ({ createApp }) => {
     dispatch(putConfig({ ...config, [name]: value }));
   };
 
+  // reset config values
+  const reset = () => {
+    dispatch(resetConfig());
+  };
+
   // validate values and create app using params
   const submit = (e) => {
     e.preventDefault();
-    if (isValideLength() && isvalideSpeed() && isValideAlgorithm()) {
+    if (validate()) {
+      createApp();
     }
+  };
+
+  const validate = () => {
+    return isValideLength() && isvalideSpeed() && isValideAlgorithm();
   };
 
   // Speed validation
   const isvalideSpeed = () => {
-    if (!isNaN(config.speed) && config.speed >= 50 && config.speed <= 5000)
+    if (
+      !isNaN(config.speed) &&
+      config.speed >= config.minSpeed &&
+      config.speed <= config.maxSpeed
+    )
       return true;
 
-    // dipsatch error
+    dispatch(
+      alertPush({
+        type: "error",
+        message: `Speed should be a number between ${config.minSpeed} and ${config.maxSpeed}`,
+      })
+    );
     return false;
   };
 
   // Length validation
   const isValideLength = () => {
     if (
-      !isNaN(config.length) >= config.minLength &&
+      !isNaN(config.length) &&
+      config.length >= config.minLength &&
       config.length <= config.maxLength
     )
       return true;
 
-    // disptach error
+    dispatch(
+      alertPush({
+        type: "error",
+        message: `Length should be a number between ${config.minLength} and ${config.maxLength}`,
+      })
+    );
     return false;
   };
 
   // Algorithm validation
   const isValideAlgorithm = () => {
-    return registredAlgorithms.includes(config.algorithm) ? true : false;
+    if (registredAlgorithms.includes(config.algorithm)) return true;
+
     // dispatch error
+    dispatch(
+      alertPush({
+        type: "error",
+        message: `${config.algorithm} algorithm is not registred, please select another one`,
+      })
+    );
+    return false;
   };
 
   return (
@@ -83,8 +118,8 @@ const SortingForm = ({ createApp }) => {
                 className="form-input cursor-pointer"
                 id="length"
                 name="length"
-                min="5"
-                max="120"
+                min={config.minLength}
+                max={config.maxLength}
                 value={config.length}
                 onChange={handleChange}
               />
@@ -100,8 +135,8 @@ const SortingForm = ({ createApp }) => {
                 className="form-input"
                 id="speed"
                 name="speed"
-                min="50"
-                max="5000"
+                min={config.minSpeed}
+                max={config.maxSpeed}
                 value={config.speed}
                 onChange={handleChange}
               />
@@ -110,9 +145,18 @@ const SortingForm = ({ createApp }) => {
           </div>
         </div>
         <div className="flex container justify-end">
-          <button type="submit" className="btn green text-sm">
-            Create
-          </button>
+          <div className="space-x-3">
+            <button
+              type="button"
+              className="btn border gray text-sm"
+              onClick={reset}
+            >
+              <RefreshIcon className="h-4 w-4 inline-block -mt-1" /> Reset
+            </button>
+            <button type="submit" className="btn border green text-sm">
+              <AdjustmentsIcon className="h-4 w-4 inline-block -mt-1" /> Create
+            </button>
+          </div>
         </div>
       </form>
     </div>

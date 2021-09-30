@@ -1,7 +1,9 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import NumberBar from "./NumberBar";
 
-const Visualizer = ({ array, colorizer, children }) => {
+const Visualizer = ({ colorizer, children }) => {
+  const { array } = useSelector((state) => state.array);
   return (
     <div className="col-span-5 lg:col-span-3 m-auto bg-gray-900 border border-gray-600 rounded-md shadow-md p-2 w-full h-96 relative">
       {children}

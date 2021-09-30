@@ -3,6 +3,7 @@
  * @author Aniss Nahim
  * @license MIT
  */
+import { updateAnimation } from "../redux/action-creators/AnimationActions";
 
 export const registredAlgorithms = ["quicksort", "mergesort"];
 
@@ -16,11 +17,13 @@ export const registredAlgorithms = ["quicksort", "mergesort"];
  * @param {Function} delay delay function for animation
  * @returns {void}
  */
-export const quickSort = (array, start, end, delayAnimation) => {
+export const quickSort = async (array, start, end, dispatch) => {
   if (start >= end) return;
-  let index = quickSortPartition(array, start, end, delayAnimation);
-  quickSort(array, start, index - 1, delayAnimation);
-  quickSort(array, index + 1, end, delayAnimation);
+  let index = await quickSortPartition(array, start, end, dispatch);
+  Promise.all([
+    quickSort(array, start, index - 1, dispatch),
+    quickSort(array, index + 1, end, dispatch),
+  ]);
 };
 
 /**
@@ -35,54 +38,50 @@ export const quickSort = (array, start, end, delayAnimation) => {
  * @param {Function} delayAnimation delayAnimation function for animation
  * @returns {Integer} pivote correct position
  */
-const quickSortPartition = (array, start, end, delayAnimation) => {
+const quickSortPartition = async (array, start, end, dispatch) => {
   let pivot = array[end];
   let pivotIndex = end;
   let j = start - 1;
   for (let i = start; i < end; i++) {
     // i is looking for the first element less than pivot
     // j is looking for the first element greater than pivot
-    delayAnimation(
-      {
+    await dispatch(
+      updateAnimation({
         pivotIndex,
         first: i,
         second: j,
         action: "From left, looking for element less than pivot",
-      },
-      array
+      })
     );
     if (array[i] < pivot) {
       j++;
-      delayAnimation(
-        {
+      await dispatch(
+        updateAnimation({
           pivotIndex,
           first: i,
           second: j,
           action: "From left, looking for element greater than pivot",
-        },
-        array
+        })
       );
       swap(array, i, j);
-      delayAnimation(
-        {
+      await dispatch(
+        updateAnimation({
           pivotIndex,
           first: i,
           second: j,
           action: `swop`,
-        },
-        array
+        })
       );
     }
   }
   swap(array, j + 1, pivotIndex);
-  delayAnimation(
-    {
+  await dispatch(
+    updateAnimation({
       pivotIndex: j + 1,
       first: end,
       second: j,
       action: "Pivot correct position",
-    },
-    array
+    })
   );
   return j + 1;
 };
