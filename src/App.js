@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { HeartIcon } from "@heroicons/react/solid";
 import { registredAlgorithms } from "./algorithms";
 import randomArray from "./helper/randomArray";
@@ -7,13 +8,14 @@ import QuickSort from "./components/QuickSort";
 import MergeSort from "./components/MergeSort";
 
 const App = () => {
-  const [array, setArray] = useState([]);
+  const { array } = useSelector((state) => state.array);
+
   const [componentProps, setComponentProps] = useState(null);
   const [currentAlgo, setCurrentAlgo] = useState("");
 
   // generate new random array
   const updateApp = (length) => {
-    setArray(randomArray(length, 5, 100));
+    // setArray(randomArray(length, 5, 100));
   };
 
   // Start the app

@@ -1,44 +1,55 @@
 import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { registredAlgorithms } from "../algorithms";
+import { putConfig } from "../redux/action-creators/ConfigActions";
 
 const SortingForm = ({ createApp }) => {
-  const [algorithm, setAlgorithm] = useState("");
-  const [speed, setSpeed] = useState(150);
-  const [length, setLength] = useState(30);
+  const config = useSelector((state) => state.config);
+  const dispatch = useDispatch();
 
   // handle Changes
-  const handleChange = (setState) => (event) => {
-    const inputName = event.target.name;
-    let value = event.target.value;
-    if (inputName === "speed" || inputName === "length") {
+  const handleChange = (event) => {
+    const target = event.target;
+    const name = target.name;
+    let value = target.value;
+    if (name === "speed" || name === "length") {
       value = parseInt(value, 10);
     }
-    setState(value);
+    dispatch(putConfig({ ...config, [name]: value }));
   };
 
   // validate values and create app using params
   const submit = (e) => {
     e.preventDefault();
     if (isValideLength() && isvalideSpeed() && isValideAlgorithm()) {
-      createApp(algorithm, length, speed);
     }
   };
 
   // Speed validation
   const isvalideSpeed = () => {
-    if (speed >= 50 && speed <= 5000) return true;
+    if (!isNaN(config.speed) && config.speed >= 50 && config.speed <= 5000)
+      return true;
+
+    // dipsatch error
     return false;
   };
 
   // Length validation
   const isValideLength = () => {
-    if (length >= 5 && length <= 120) return true;
+    if (
+      !isNaN(config.length) >= config.minLength &&
+      config.length <= config.maxLength
+    )
+      return true;
+
+    // disptach error
     return false;
   };
 
   // Algorithm validation
   const isValideAlgorithm = () => {
-    return registredAlgorithms.includes(algorithm);
+    return registredAlgorithms.includes(config.algorithm) ? true : false;
+    // dispatch error
   };
 
   return (
@@ -51,9 +62,10 @@ const SortingForm = ({ createApp }) => {
             </label>
             <select
               id="algorithm"
+              name="algorithm"
               className="form-input text-sm bg-gray-800 text-white"
-              value={algorithm}
-              onChange={handleChange(setAlgorithm)}
+              value={config.algorithm}
+              onChange={handleChange}
             >
               <option></option>
               <option value="quicksort">Quick Sort</option>
@@ -62,7 +74,7 @@ const SortingForm = ({ createApp }) => {
           </div>
           <div>
             <label htmlFor="length" className="text-sm font-medium">
-              Array Length : {length}
+              Array Length : {config.length}
             </label>
             <div className="flex justify-between items-center mt-2">
               <span className="text-md font-medium">5</span>
@@ -73,14 +85,14 @@ const SortingForm = ({ createApp }) => {
                 name="length"
                 min="5"
                 max="120"
-                value={length}
-                onChange={handleChange(setLength)}
+                value={config.length}
+                onChange={handleChange}
               />
               <span className="text-md font-medium">120</span>
             </div>
           </div>
           <div>
-            <p className="font-medium">Speed : {speed / 1000} s</p>
+            <p className="font-medium">Speed : {config.speed / 1000} s</p>
             <div className="flex justify-between items-center mt-2">
               <span className="text-md font-medium">50ms</span>
               <input
@@ -90,8 +102,8 @@ const SortingForm = ({ createApp }) => {
                 name="speed"
                 min="50"
                 max="5000"
-                value={speed}
-                onChange={handleChange(setSpeed)}
+                value={config.speed}
+                onChange={handleChange}
               />
               <span className="text-md font-medium">5s</span>
             </div>

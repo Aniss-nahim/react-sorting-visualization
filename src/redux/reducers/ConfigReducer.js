@@ -4,9 +4,13 @@
 import * as actionTypes from "../action-types/ConfigActionTypes";
 
 const initState = {
-  algortim: "",
+  algorithm: "",
   speed: 150,
   length: 20,
+  maxLength: 120,
+  minLength: 5,
+  maxValue: 100,
+  minValue: 5,
 };
 
 const configReducer = (state = initState, action) => {
