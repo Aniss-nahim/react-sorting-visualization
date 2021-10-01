@@ -20,7 +20,7 @@ export const registredAlgorithms = ["quicksort", "mergesort"];
 export const quickSort = async (array, start, end, dispatch) => {
   if (start >= end) return;
   let index = await quickSortPartition(array, start, end, dispatch);
-  Promise.all([
+  await Promise.all([
     quickSort(array, start, index - 1, dispatch),
     quickSort(array, index + 1, end, dispatch),
   ]);

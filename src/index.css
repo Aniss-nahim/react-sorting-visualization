@@ -13,7 +13,7 @@
   }
 
   .btn {
-    @apply py-1 px-3 rounded-md shadow-sm;
+    @apply py-1 px-3 rounded-md shadow-sm disabled:opacity-50;
   }
 
   .green {
