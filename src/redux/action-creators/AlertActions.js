@@ -19,3 +19,10 @@ export const alertPush =
       type: actionTypes.ALERT_AUTO_REMOVE,
     });
   };
+
+export const alertDelete = (index) => (dispatch) => {
+  dispatch({
+    type: actionTypes.ALERT_DELETED,
+    payload: index,
+  });
+};

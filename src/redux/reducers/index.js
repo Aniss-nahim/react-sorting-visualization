@@ -8,7 +8,7 @@ const rootReducer = combineReducers({
   array: arrayReducer,
   animation: animationReducer,
   config: configReducer,
-  alert: alertReducer,
+  alerts: alertReducer,
 });
 
 export default rootReducer;
