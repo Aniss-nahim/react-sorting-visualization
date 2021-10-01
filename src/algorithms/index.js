@@ -1,5 +1,5 @@
 /**
- * Sorting algorithms servicesù
+ * Sorting algorithms services
  * @author Aniss Nahim
  * @license MIT
  */
@@ -8,7 +8,7 @@ import { updateAnimation } from "../redux/action-creators/AnimationActions";
 export const registredAlgorithms = ["quicksort", "mergesort"];
 
 /**
- * Sort array using Quick Sort algorithm
+ * Sorts array using Quick Sort algorithm
  * Time complexity : O(nlogn)
  * Space complexity : O(n)
  * @param {Array} array unsorted array
@@ -20,14 +20,12 @@ export const registredAlgorithms = ["quicksort", "mergesort"];
 export const quickSort = async (array, start, end, dispatch) => {
   if (start >= end) return;
   let index = await quickSortPartition(array, start, end, dispatch);
-  Promise.all([
-    quickSort(array, start, index - 1, dispatch),
-    quickSort(array, index + 1, end, dispatch),
-  ]);
+  await quickSort(array, start, index - 1, dispatch);
+  await quickSort(array, index + 1, end, dispatch);
 };
 
 /**
- * Patition array into two sub arrays
+ * Patitions array into two sub arrays
  * Time complexity : O(n);
  * Space complexity : O(n);
  * first sub array contains elements less then or equal to pivot
@@ -86,6 +84,12 @@ const quickSortPartition = async (array, start, end, dispatch) => {
   return j + 1;
 };
 
+/**
+ * Swaps two elements for a given array
+ * @param {Array} array
+ * @param {Integer} i
+ * @param {Integer} j
+ */
 const swap = (array, i, j) => {
   let temp = array[i];
   array[i] = array[j];
@@ -93,7 +97,7 @@ const swap = (array, i, j) => {
 };
 
 /**
- * Sort array using Merge Sort algorithm :
+ * Sorts array using Merge Sort algorithm :
  * Time complexity : O(nlogn)
  * Space complexity : O(n + n/2) <=> O(n)
  * Temporary array is required otherwise the time complexity will be O(n^2logn)
@@ -102,12 +106,12 @@ const swap = (array, i, j) => {
  * @param {Integer} end ending index of the array
  * @returns {void}
  */
-export const mergeSort = (array, start, end, delayAnimation) => {
+export const mergeSort = async (array, start, end, dispatch) => {
   if (start >= end) return;
   let half = Math.floor((start + end) / 2);
-  mergeSort(array, start, half, delayAnimation);
-  mergeSort(array, half + 1, end, delayAnimation);
-  merge(array, start, half, end, delayAnimation);
+  await mergeSort(array, start, half, dispatch);
+  await mergeSort(array, half + 1, end, dispatch);
+  await merge(array, start, half, end, dispatch);
 };
 
 /**
@@ -117,54 +121,61 @@ export const mergeSort = (array, start, end, delayAnimation) => {
  * @param {Integer} half middle index of the array
  * @param {Integer} end ending index of the array
  */
-const merge = (array, start, half, end, delayAnimation) => {
+const merge = async (array, start, half, end, dispatch) => {
   let temp = array.slice(half + 1, end + 1); // O(N)
   let i = half; // index on main array
   let j = temp.length - 1; // index on temp array
   let k = end; // index on
 
-  delayAnimation(
-    {
-      action: "ready to merge",
+  await dispatch(
+    updateAnimation({
+      action: "Start merging",
       first: i,
       second: j + half + 1,
-    },
-    array
+    })
   );
 
   while (i >= start && j >= 0) {
-    // animation
-    delayAnimation(
-      { action: "comparing", first: i, second: j + half + 1 },
-      array
+    await dispatch(
+      updateAnimation({ action: "comparing", first: i, second: j + half + 1 })
     );
+
     if (array[i] > temp[j]) {
-      array[k--] = array[i--];
-      delayAnimation(
-        { action: "ordering", first: i, second: j + half + 1 },
-        array
+      array[k--] = array[i];
+      await dispatch(
+        updateAnimation({ action: "merging", first: i, second: j + half + 1 })
       );
+      i--;
     } else {
-      array[k--] = temp[j--];
-      delayAnimation(
-        { action: "ordering", first: i, second: j + half + 1 },
-        array
+      array[k--] = temp[j];
+      await dispatch(
+        updateAnimation({ action: "merging", first: i, second: j + half + 1 })
       );
+      j--;
     }
-    // animation
   }
 
   while (i >= start) {
-    array[k--] = array[i--];
-    delayAnimation({ action: "last moves", first: i, second: j + half + 1 }, [
-      ...array,
-    ]);
+    array[k--] = array[i];
+    await dispatch(
+      updateAnimation({
+        action: "remaining elements",
+        first: i,
+        second: j + half + 1,
+      })
+    );
+    i--;
   }
 
   while (j >= 0) {
-    array[k--] = temp[j--];
-    delayAnimation({ action: "last moves", first: i, second: j + half + 1 }, [
-      ...array,
-    ]);
+    array[k--] = temp[j];
+    await dispatch(
+      updateAnimation({
+        action: "remaining elements",
+        first: i,
+        second: j + half + 1,
+      })
+    );
+    j--;
   }
 };

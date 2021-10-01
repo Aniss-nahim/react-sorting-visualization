@@ -1,5 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
+import Array from "./Array";
 
 const QuickSortStatus = ({ colorizer }) => {
   const { array } = useSelector((state) => state.array);
@@ -7,20 +8,7 @@ const QuickSortStatus = ({ colorizer }) => {
 
   return (
     <div className="bg-gray-900 border border-gray-600 text-white col-span-5 lg:col-span-2 flex flex-col justify-around rounded-md shadow-lg p-3">
-      <div className="row flex-wrap itmes-center justify-center space-x-1">
-        <span className="font-medium">[</span>
-        {array.map((item, index) => (
-          <div
-            key={index}
-            className={`rounded-md text-center text-gray-900 ${colorizer(
-              index
-            )}`}
-          >
-            <p className="text-white">{item},</p>
-          </div>
-        ))}
-        <span className="font-medium">]</span>
-      </div>
+      <Array array={array} colorizer={colorizer} />
       <div className="pt-2 space-y-3">
         <h1 className="text-center uppercase font-bold text-xl">Status</h1>
         <p className="text-lg text-center font-medium text-green-400 uppercase">

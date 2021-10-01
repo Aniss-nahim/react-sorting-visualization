@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-// import { delayAnimation } from "../helper/delayAnimation";
+import { alertPush } from "../redux/action-creators/AlertActions";
 import {
   sortingArray,
   sortedArray,
@@ -11,36 +11,31 @@ const useAnimation = (sortingAlgorithm) => {
 
   const dispatch = useDispatch();
 
-  // config delay function
-  // set the animation object on each delay
-  // let delayFunc = delayAnimation(setAnimation, speed, setArraySnapshot);
-
   // trigger sorting function
-  const startSorting = async () => {
+  const startSorting = () => {
     // isSorting set to true
     dispatch(sortingArray());
-    await sort();
-    dispatch(stopSortingArray());
+    sort()
+      .then(() => {
+        dispatch(sortedArray());
+        dispatch(alertPush({ type: "success", message: "Array sorted !" }));
+      })
+      .catch((error) => {
+        console.log(error);
+        dispatch(
+          alertPush({
+            type: "error",
+            message: "Error occurred please try again",
+          })
+        );
+      })
+      .finally(() => dispatch(stopSortingArray()));
   };
 
   // Sort the array using sorting algorithm
   const sort = async () => {
     await sortingAlgorithm(array, 0, array.length - 1, dispatch);
-    await dispatch(sortedArray());
   };
-
-  // // Rest all
-  // const reset = (newArray, newSpeed) => {
-  //   setIsSorting(false);
-  //   setSpeed(newSpeed);
-  //   setArraySnapshot([...newArray]);
-  //   setAnimation({
-  //     action: "Click the sort button to start quick sort",
-  //     first: 0,
-  //     pivotIndex: newArray.length - 1,
-  //     second: newArray.length - 2,
-  //   });
-  // };
 
   return [startSorting];
 };

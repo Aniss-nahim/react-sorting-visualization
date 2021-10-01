@@ -22,6 +22,7 @@ const arrayReducer = (state = initState, action) => {
     case actionTypes.START_SORTING:
       return {
         ...state,
+        isSorted: false,
         isSorting: true,
       };
 

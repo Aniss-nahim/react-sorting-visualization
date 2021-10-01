@@ -6,6 +6,7 @@ import { alertPush } from "../redux/action-creators/AlertActions";
 import { AdjustmentsIcon, RefreshIcon } from "@heroicons/react/solid";
 
 const SortingForm = ({ createApp }) => {
+  const { isSorting } = useSelector((state) => state.array);
   const config = useSelector((state) => state.config);
   const dispatch = useDispatch();
 
@@ -147,13 +148,22 @@ const SortingForm = ({ createApp }) => {
         <div className="flex container justify-end">
           <div className="space-x-3">
             <button
+              disabled={isSorting}
               type="button"
-              className="btn border gray text-sm"
+              className={`btn border gray text-sm ${
+                isSorting ? "cursor-not-allowed" : ""
+              }`}
               onClick={reset}
             >
               <RefreshIcon className="h-4 w-4 inline-block -mt-1" /> Reset
             </button>
-            <button type="submit" className="btn border green text-sm">
+            <button
+              type="submit"
+              className={`btn border green text-sm ${
+                isSorting ? "cursor-not-allowed" : ""
+              }`}
+              disabled={isSorting}
+            >
               <AdjustmentsIcon className="h-4 w-4 inline-block -mt-1" /> Create
             </button>
           </div>

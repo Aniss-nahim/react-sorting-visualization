@@ -5,6 +5,8 @@ import { registredAlgorithms } from "./algorithms";
 import { createArray } from "./redux/action-creators/ArrayActions";
 import SortingForm from "./components/SortingForm";
 import QuickSort from "./components/QuickSort";
+import MergeSort from "./components/MergeSort";
+import Alert from "./Alert";
 
 const App = () => {
   const config = useSelector((state) => state.config);
@@ -24,6 +26,9 @@ const App = () => {
       case registredAlgorithms[0]:
         return <QuickSort />;
 
+      case registredAlgorithms[1]:
+        return <MergeSort />;
+
       default:
         return (
           <div className="h-96 p-2 lg:col-span-3 lg:col-start-2 flex items-center justify-center">
@@ -36,7 +41,8 @@ const App = () => {
   };
 
   return (
-    <>
+    <div className="relative">
+      <Alert />
       <div className="p-2 h-full w-full bg-gray-800">
         <div className="border-b border-gray-300">
           <div className="container text-white">
@@ -58,7 +64,7 @@ const App = () => {
         Made with <HeartIcon className="h-4 w-4 inline-block text-red-600" /> By
         Aniss Nahim
       </div>
-    </>
+    </div>
   );
 };
 

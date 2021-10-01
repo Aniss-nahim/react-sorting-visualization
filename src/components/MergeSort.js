@@ -1,28 +1,29 @@
 import React from "react";
-import useMergeSort from "../hooks/useMergeSort";
+import { useDispatch } from "react-redux";
+import { createArray } from "../redux/action-creators/ArrayActions";
+import Visualizer from "./Visualizer";
 import MergeSortStatus from "./status/MergeSortStatus";
+import useMergeSort from "../hooks/useMergeSort";
 
-const MergeSort = ({ array, length, updateApp, speed }) => {
-  const [
-    animation,
-    colorizer,
-    arraySnapShot,
-    setArraySnapshot,
-    startSorting,
-    isSorting,
-  ] = useMergeSort(array, 100);
+const MergeSort = () => {
+  const [colorizer, startSorting] = useMergeSort();
 
-  // MergeSort Status props
-  const statusProps = {
-    animation,
-    colorizer,
-    arraySnapShot,
+  const dispatch = useDispatch();
+
+  // Regenerate new random Array
+  const updateArray = () => {
+    dispatch(createArray());
   };
 
   return (
-    <div>
-      <MergeSortStatus {...statusProps} />
-    </div>
+    <>
+      <Visualizer
+        colorizer={colorizer}
+        regenerate={updateArray}
+        start={startSorting}
+      />
+      <MergeSortStatus colorizer={colorizer} />
+    </>
   );
 };
 
