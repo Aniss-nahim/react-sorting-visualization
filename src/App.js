@@ -5,6 +5,7 @@ import { registredAlgorithms } from "./algorithms";
 import { createArray } from "./redux/action-creators/ArrayActions";
 import SortingForm from "./components/SortingForm";
 import QuickSort from "./components/QuickSort";
+import MergeSort from "./components/MergeSort";
 
 const App = () => {
   const config = useSelector((state) => state.config);
@@ -23,6 +24,9 @@ const App = () => {
     switch (currentAlgo) {
       case registredAlgorithms[0]:
         return <QuickSort />;
+
+      case registredAlgorithms[1]:
+        return <MergeSort />;
 
       default:
         return (

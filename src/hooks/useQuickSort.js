@@ -5,23 +5,24 @@ import { quickSort } from "../algorithms";
 import useAnimation from "./useAnimation";
 
 const useQuickSort = () => {
-  const { array } = useSelector((state) => state.array);
+  const { array, isSorted } = useSelector((state) => state.array);
   const { animation } = useSelector((state) => state.animation);
   const dispatch = useDispatch();
 
   useEffect(() => {
     // Initial animation state for quick sort
-    dispatch(
-      updateAnimation({
-        pivotIndex: array.length - 1,
-        action: "Ready to sort",
-        first: 0,
-        second: array.length - 2,
-      })
-    );
-
+    if (!isSorted) {
+      dispatch(
+        updateAnimation({
+          pivotIndex: array.length - 1,
+          action: "Ready to sort",
+          first: 0,
+          second: array.length - 2,
+        })
+      );
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [isSorted]);
 
   const [startSorting] = useAnimation(quickSort);
 
