@@ -7,6 +7,7 @@ import SortingForm from "./components/SortingForm";
 import QuickSort from "./components/QuickSort";
 import MergeSort from "./components/MergeSort";
 import Alert from "./Alert";
+import HeapSort from "./components/HeapSort";
 
 const App = () => {
   const config = useSelector((state) => state.config);
@@ -28,6 +29,9 @@ const App = () => {
 
       case registredAlgorithms[1]:
         return <MergeSort />;
+
+      case registredAlgorithms[2]:
+        return <HeapSort />;
 
       default:
         return (

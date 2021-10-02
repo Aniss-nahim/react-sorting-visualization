@@ -106,6 +106,7 @@ const SortingForm = ({ createApp }) => {
               <option></option>
               <option value="quicksort">Quick Sort</option>
               <option value="mergesort">Merge Sort</option>
+              <option value="heapsort">Heap Sort</option>
             </select>
           </div>
           <div>
