@@ -4,9 +4,8 @@
  * @license MIT
  */
 import { updateAnimation } from "../redux/action-creators/AnimationActions";
-import randomArray from "../helper/randomArray";
 
-export const registredAlgorithms = ["quicksort", "mergesort"];
+export const registredAlgorithms = ["quicksort", "mergesort", "heapsort"];
 
 /**
  * Sorts array using Quick Sort algorithm
@@ -183,14 +182,6 @@ const merge = async (array, start, half, end, dispatch) => {
   }
 };
 
-export const heapSort = (array, start, end, dispatch) => {
-  buildMaxHeap(array, start, end, dispatch);
-  for (let i = end; i >= start; i--) {
-    swap(array, start, i);
-    heapify(array, start, i - 1);
-  }
-};
-
 /**
  * Sorts array from start to end using Heap sort algorithm
  * AVG Time complexity : O(nlogn)
@@ -200,16 +191,73 @@ export const heapSort = (array, start, end, dispatch) => {
  * @param {Integer} end
  * @param {Function} dispatch
  */
-const buildMaxHeap = (array, start, end, dispatch) => {
-  const lastParent = Math.floor((end + start) / 2) - 1;
-  for (let iParent = lastParent; iParent >= 0; iParent--) {
-    heapify(array, iParent, end);
+export const heapSort = async (array, start, end, dispatch) => {
+  await dispatch(
+    updateAnimation({
+      parent: -1,
+      left: -1,
+      right: -1,
+      action: "Building max heap",
+    })
+  );
+  await buildMaxHeap(array, start, end, dispatch);
+  for (let i = end; i >= start; i--) {
+    await dispatch(
+      updateAnimation({
+        parent: start,
+        left: -1,
+        right: -1,
+        action: "Max heap built, swap parent with last element",
+      })
+    );
+    swap(array, start, i);
+    await heapify(array, start, i - 1, dispatch);
   }
 };
 
-const heapify = (array, iParent, end) => {
+/**
+ * Builds max heap from a given array
+ * last parent node is at the index floor(n/2) - 1
+ * @param {Array} array
+ * @param {Integer} start
+ * @param {Integer} end
+ * @param {Function} dispatch
+ * @return {Promise}
+ */
+const buildMaxHeap = async (array, start, end, dispatch) => {
+  const lastParent = Math.floor((end + start) / 2) - 1;
+  await dispatch(
+    updateAnimation({
+      parent: lastParent,
+      right: -1,
+      left: -1,
+      action: "heapify start",
+    })
+  );
+  for (let iParent = lastParent; iParent >= 0; iParent--) {
+    await heapify(array, iParent, end, dispatch);
+  }
+};
+
+/**
+ * heapifies array starting from iParent to the root
+ * Each parent is garter than or equal to it's left and right children
+ * @param {Array} array
+ * @param {Integer} iParent
+ * @param {Integer} end
+ * @param {Function} dispatch
+ */
+const heapify = async (array, iParent, end, dispatch) => {
   const leftNode = 2 * iParent + 1;
   const rightNode = leftNode + 1;
+  await dispatch(
+    updateAnimation({
+      parent: iParent,
+      right: rightNode,
+      left: leftNode,
+      action: "Heapify",
+    })
+  );
   let maxIndex = iParent;
   if (leftNode <= end && array[maxIndex] < array[leftNode]) {
     maxIndex = leftNode;
@@ -221,13 +269,14 @@ const heapify = (array, iParent, end) => {
 
   if (maxIndex !== iParent) {
     swap(array, maxIndex, iParent);
-    heapify(array, maxIndex, end);
+    await dispatch(
+      updateAnimation({
+        parent: iParent,
+        right: rightNode,
+        left: leftNode,
+        action: "Swap",
+      })
+    );
+    await heapify(array, maxIndex, end, dispatch);
   }
-};
-
-export const heapSortTest = () => {
-  const array = randomArray(5, 5, 100);
-  console.log(array, "main");
-  heapSort(array, 0, array.length - 1, null);
-  console.log(array, "sorted");
 };
