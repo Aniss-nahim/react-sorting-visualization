@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { HeartIcon } from "@heroicons/react/solid";
 import { registredAlgorithms } from "./algorithms";
@@ -7,12 +7,18 @@ import SortingForm from "./components/SortingForm";
 import QuickSort from "./components/QuickSort";
 import MergeSort from "./components/MergeSort";
 import Alert from "./Alert";
+import { heapSortTest } from "./algorithms";
 
 const App = () => {
   const config = useSelector((state) => state.config);
   const [currentAlgo, setCurrentAlgo] = useState("");
 
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    console.log("1");
+    heapSortTest();
+  }, []);
 
   // Start the app
   const createApp = () => {

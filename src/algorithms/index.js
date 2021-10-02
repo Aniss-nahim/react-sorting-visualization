@@ -4,17 +4,18 @@
  * @license MIT
  */
 import { updateAnimation } from "../redux/action-creators/AnimationActions";
+import randomArray from "../helper/randomArray";
 
 export const registredAlgorithms = ["quicksort", "mergesort"];
 
 /**
  * Sorts array using Quick Sort algorithm
- * Time complexity : O(nlogn)
- * Space complexity : O(n)
+ * AVG Time complexity : O(nlogn)
+ * AVG Space complexity : O(logn)
  * @param {Array} array unsorted array
  * @param {Integer} start starting index of the array
  * @param {Integer} end ending index of the array
- * @param {Function} delay delay function for animation
+ * @param {Function} dispatch dispatch action
  * @returns {void}
  */
 export const quickSort = async (array, start, end, dispatch) => {
@@ -26,14 +27,14 @@ export const quickSort = async (array, start, end, dispatch) => {
 
 /**
  * Patitions array into two sub arrays
- * Time complexity : O(n);
- * Space complexity : O(n);
+ * Time complexity : O(n)
+ * Space complexity : O(n)
  * first sub array contains elements less then or equal to pivot
  * second sub array contains elements greater then pivot
  * @param {Array} array array to partition
  * @param {Integer} start starting index of the array
  * @param {Integer} end ending index of the array
- * @param {Function} delayAnimation delayAnimation function for animation
+ * @param {Function} dispatch dispatch action
  * @returns {Integer} pivote correct position
  */
 const quickSortPartition = async (array, start, end, dispatch) => {
@@ -104,7 +105,7 @@ const swap = (array, i, j) => {
  * @param {Array} array unsorted array
  * @param {Integer} start starting index of the array
  * @param {Integer} end ending index of the array
- * @returns {void}
+ * @returns {Promise}
  */
 export const mergeSort = async (array, start, end, dispatch) => {
   if (start >= end) return;
@@ -120,6 +121,8 @@ export const mergeSort = async (array, start, end, dispatch) => {
  * @param {Integer} start starting index of the array
  * @param {Integer} half middle index of the array
  * @param {Integer} end ending index of the array
+ * @param {Function} dispatch dispatch action
+ * @return {Promise}
  */
 const merge = async (array, start, half, end, dispatch) => {
   let temp = array.slice(half + 1, end + 1); // O(N)
@@ -178,4 +181,53 @@ const merge = async (array, start, half, end, dispatch) => {
     );
     j--;
   }
+};
+
+export const heapSort = (array, start, end, dispatch) => {
+  buildMaxHeap(array, start, end, dispatch);
+  for (let i = end; i >= start; i--) {
+    swap(array, start, i);
+    heapify(array, start, i - 1);
+  }
+};
+
+/**
+ * Sorts array from start to end using Heap sort algorithm
+ * AVG Time complexity : O(nlogn)
+ * AVG Space complexity : O(1)
+ * @param {Array} array
+ * @param {Integer} start
+ * @param {Integer} end
+ * @param {Function} dispatch
+ */
+const buildMaxHeap = (array, start, end, dispatch) => {
+  const lastParent = Math.floor((end + start) / 2) - 1;
+  for (let iParent = lastParent; iParent >= 0; iParent--) {
+    heapify(array, iParent, end);
+  }
+};
+
+const heapify = (array, iParent, end) => {
+  const leftNode = 2 * iParent + 1;
+  const rightNode = leftNode + 1;
+  let maxIndex = iParent;
+  if (leftNode <= end && array[maxIndex] < array[leftNode]) {
+    maxIndex = leftNode;
+  }
+
+  if (rightNode <= end && array[maxIndex] < array[rightNode]) {
+    maxIndex = rightNode;
+  }
+
+  if (maxIndex !== iParent) {
+    swap(array, maxIndex, iParent);
+    heapify(array, maxIndex, end);
+  }
+};
+
+export const heapSortTest = () => {
+  const array = randomArray(5, 5, 100);
+  console.log(array, "main");
+  heapSort(array, 0, array.length - 1, null);
+  console.log(array, "sorted");
 };
