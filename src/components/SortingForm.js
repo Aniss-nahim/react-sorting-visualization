@@ -103,10 +103,13 @@ const SortingForm = ({ createApp }) => {
               value={config.algorithm}
               onChange={handleChange}
             >
-              <option></option>
+              <option disabled value="">
+                Choose your algorithm
+              </option>
               <option value="quicksort">Quick Sort</option>
               <option value="mergesort">Merge Sort</option>
               <option value="heapsort">Heap Sort</option>
+              <option value="bubblesort">Bubble Sort</option>
             </select>
           </div>
           <div>

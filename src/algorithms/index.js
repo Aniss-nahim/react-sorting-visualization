@@ -5,7 +5,12 @@
  */
 import { updateAnimation } from "../redux/action-creators/AnimationActions";
 
-export const registredAlgorithms = ["quicksort", "mergesort", "heapsort"];
+export const registredAlgorithms = [
+  "quicksort",
+  "mergesort",
+  "heapsort",
+  "bubblesort",
+];
 
 /**
  * Sorts array using Quick Sort algorithm
@@ -278,5 +283,38 @@ const heapify = async (array, iParent, end, dispatch) => {
       })
     );
     await heapify(array, maxIndex, end, dispatch);
+  }
+};
+
+/**
+ * Sorts array from start to end using Bubble sort algorithm
+ * AVG Time complexity : O(n^2)
+ * Space complexity : O(1)
+ * @param {Array} array
+ * @param {Integer} start
+ * @param {Integer} end
+ * @param {Function} dispatch
+ */
+export const bubbleSort = async (array, start, end, dispatch) => {
+  for (let i = start + 1; i <= end; i++) {
+    for (let j = start; j <= end - i; j++) {
+      await dispatch(
+        updateAnimation({
+          action: "Comparing",
+          first: j,
+          second: j + 1,
+        })
+      );
+      if (array[j] > array[j + 1]) {
+        await dispatch(
+          updateAnimation({
+            action: "Swap",
+            first: j,
+            second: j + 1,
+          })
+        );
+        swap(array, j, j + 1);
+      }
+    }
   }
 };
